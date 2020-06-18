@@ -1229,14 +1229,14 @@ readsfile <- as.character(args[[2]])
 options(repos = c(CRAN = 'https://mirrors.dotsrc.org/cran'), download.file.method = 'libcurl')
 
 suppressPackageStartupMessages({
-if(!require("data.table")) {
-  install.packages("data.table", Ncpus = 100)
-  require("data.table")
-}
-if(!require("ggplot2")) {
-  install.packages("ggplot2", Ncpus = 100)
-  require("ggplot2")
-}
+  if(!require("data.table")) {
+    install.packages("data.table", Ncpus = 100)
+    require("data.table")
+  }
+  if(!require("ggplot2")) {
+    install.packages("ggplot2", Ncpus = 100)
+    require("ggplot2")
+  }
 })
 setDTthreads(128L)
 
@@ -1301,26 +1301,25 @@ mofo[,plateID := as.factor(plateID)]
 fwrite(mofo, paste0("mofo_", outputdir, ".csv"))
 
 #plot V1-3
+colors <- RColorBrewer::brewer.pal(3, "Set1") #red, blue, green
 plot_v13 <- ggplot(
   mofo[barcodeGroup == "bV13fr" & observation != "true negative"],
   aes(x = fwd,
       y = rev,
-      fill = readsBin,
-      color = observation)) +
+      fill = observation,
+      color = reads)) +
   geom_tile(size = 1,
             width = 0.8,
-            height = 0.8) +
-  scale_fill_manual(values = c("0-10" = "grey80",
-                               "11-50" = "grey50", 
-                               "51-10k" = "grey30",
-                               ">10k" = "orange")) +
+            height = 0.8,
+            alpha = 0.5) +
   geom_text(aes(x = fwd, y = rev, label = reads),
             color = "black", 
             size = 4,
             inherit.aes = FALSE) +
-  scale_color_manual(values = c("false positive" = "red", 
-                                "true positive" = "green3",
-                                "true negative" = "black")) +
+  scale_color_distiller(palette = "Greys", direction = 1, trans = "log10") +
+  scale_fill_manual(values = c("false positive" = colors[1],
+                               "true negative" = colors[2],
+                               "true positive" = colors[3])) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
         legend.title = element_blank(),
         panel.grid.major = element_blank(),
@@ -1332,22 +1331,20 @@ plot_nextera <- ggplot(
   mofo[barcodeGroup == "nexamp" & observation != "true negative"],
   aes(x = fwd,
       y = rev,
-      fill = readsBin,
-      color = observation)) +
+      fill = observation,
+      color = reads)) +
   geom_tile(size = 1,
             width = 0.8,
-            height = 0.8) +
-  scale_fill_manual(values = c("0-10" = "grey80",
-                               "11-50" = "grey50", 
-                               "51-10k" = "grey30",
-                               ">10k" = "orange")) +
+            height = 0.8,
+            alpha = 0.5) +
   geom_text(aes(x = fwd, y = rev, label = reads),
             color = "black", 
             size = 4,
             inherit.aes = FALSE) +
-  scale_color_manual(values = c("false positive" = "red", 
-                                "true positive" = "green3",
-                                "true negative" = "black")) +
+  scale_color_distiller(palette = "Greys", direction = 1, trans = "log10") +
+  scale_fill_manual(values = c("false positive" = colors[1],
+                               "true negative" = colors[2],
+                               "true positive" = colors[3])) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
         legend.title = element_blank(),
         panel.grid.major = element_blank(),
