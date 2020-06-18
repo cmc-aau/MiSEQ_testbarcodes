@@ -1,7 +1,7 @@
 # MiSEQ_testbarcodes
 Script for testing false/true positive reads in a MiSEQ run with custom barcodes. Used for assessing cross talk and sample bleed over during extraction.
 
-What it does
+**What it does**
  - Loads bcl2fastq module
  - Writes out a complete SampleSheet with all nextera+custom V13 forward and reverse barcodes (including those not necessarily barcoded in the pooled library)
  - Reruns bcl2fastq with the complete sample sheet
