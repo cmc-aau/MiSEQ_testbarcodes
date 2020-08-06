@@ -1223,8 +1223,6 @@ echoWithHeader "Generating plots"
 R --slave -q --args "$outputdir" "$readsfile" << 'rscript'
 #extract passed args from shell script
 args <- commandArgs(trailingOnly = TRUE)
-outputdir <- as.character(args[[1]])
-readsfile <- as.character(args[[2]])
 
 #download packages from AAU CRAN mirror
 options(repos = c(CRAN = 'https://mirrors.dotsrc.org/cran'), download.file.method = 'libcurl')
@@ -1306,7 +1304,7 @@ mofo[barcodeID >= 385 & barcodeID <= 480, plateID := plateGroups[5]]
 mofo[barcodeID >= 481 & barcodeID <= 576, plateID := plateGroups[6]]
 mofo[,plateID := factor(plateID, levels = plateGroups)]
 #write out
-fwrite(mofo, paste0("mofo_", outputdir, ".csv"))
+fwrite(mofo, "mofo.csv")
 
 #plotting function
 goplotty <- function(data) {
@@ -1334,13 +1332,13 @@ goplotty <- function(data) {
 
 #plot V1-3 and save to pdf
 plot_v13 <- goplotty(mofo[barcodeGroup == "bV13fr"])
-ggsave(paste0("plot_", outputdir, "_v13.pdf"), plot = plot_v13, height = 10, width = 18)
+ggsave("plot_v13.pdf", plot = plot_v13, height = 10, width = 18)
 
 #plot nextera and save to pdf
 mofo_nextera <- mofo[barcodeGroup == "nexamp"]
 mofo_nextera[,plateID := factor(plateID, levels = plateGroups[c(1, 3, 2, 4:6)])] #swap plate 2+3
 plot_nextera <- goplotty(mofo_nextera)
-ggsave(paste0("plot_", outputdir, "_nextera.pdf"), plot = plot_nextera, height = 10, width = 18)
+ggsave("plot_nextera.pdf", plot = plot_nextera, height = 10, width = 18)
 
 rscript
 
