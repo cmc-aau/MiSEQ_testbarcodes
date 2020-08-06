@@ -1226,7 +1226,15 @@ args <- commandArgs(trailingOnly = TRUE)
 outputdir <- as.character(args[[1]])
 readsfile <- as.character(args[[2]])
 
+#download packages from AAU CRAN mirror
 options(repos = c(CRAN = 'https://mirrors.dotsrc.org/cran'), download.file.method = 'libcurl')
+
+#use a private library
+userLibPath <- path.expand(Sys.getenv("R_LIBS_USER"))
+dir.create(path = userLibPath, showWarnings = FALSE, recursive = TRUE)
+.libPaths(c(userLibPath, .libPaths()))
+
+#install packages
 suppressPackageStartupMessages({
   if(!require("data.table")) {
     install.packages("data.table", Ncpus = 100)
@@ -1237,7 +1245,9 @@ suppressPackageStartupMessages({
     require("ggplot2")
   }
 })
+
 setDTthreads(128L)
+
 #load sample sheet (samples only)
 samplesheet <- readLines("SampleSheet.csv")
 samplesheet <- samplesheet[-which(is.na(samplesheet) | samplesheet == "")]
@@ -1257,6 +1267,7 @@ samplesheet[,index_index2 := paste(index, index2, sep = "+")]
 samplesheet[,index := NULL]
 samplesheet[,index2 := NULL]
 samplesheet[,observation := "true positive"]
+
 #load sample sheet (all barcodes)
 allbarcodessheet <- fread("SampleSheet_complete.csv", skip = 19, select = c(3:7))
 allbarcodessheet[,index_index2 := paste(index, index2, sep = "+")]
@@ -1264,6 +1275,7 @@ allbarcodessheet[,index := NULL]
 allbarcodessheet[,index2 := NULL]
 allbarcodessheet[,rev := factor(rev, levels = paste(rep("rev", 24), 1:24, sep = "-"))]
 allbarcodessheet[,fwd := factor(fwd, levels = paste(rep("fwd", 24), 24:1, sep = "-"))]
+
 #load reads per barcode sheet, and remove duplicates by taking the mean, also to spot on plot if they are not identical
 readsperbarcode <- fread("readsperbarcode.csv")[, .(reads = mean(reads)), by = index_index2]
 #merge and sort
