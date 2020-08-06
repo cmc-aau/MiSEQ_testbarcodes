@@ -1220,7 +1220,7 @@ done
 unset counter
 
 echoWithHeader "Generating plots"
-R --slave -q --args "$outputdir" "$readsfile" << 'rscript'
+cat << 'rscript' > rscript.R
 #extract passed args from shell script
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -1339,8 +1339,9 @@ mofo_nextera <- mofo[barcodeGroup == "nexamp"]
 mofo_nextera[,plateID := factor(plateID, levels = plateGroups[c(1, 3, 2, 4:6)])] #swap plate 2+3
 plot_nextera <- goplotty(mofo_nextera)
 ggsave("plot_nextera.pdf", plot = plot_nextera, height = 10, width = 18)
-
 rscript
+
+Rscript --vanilla rscript.R
 
 duration=$(printf '%02dh:%02dm:%02ds\n' $(($SECONDS/3600)) $(($SECONDS%3600/60)) $(($SECONDS%60)))
 echoWithHeader "Done in: $duration!"
