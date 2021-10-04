@@ -22,8 +22,9 @@ echoWithHeader() {
 }
 
 rundir="${1}"
-outputdir=$(basename $rundir)
-mkdir -p $outputdir
+outputdir=$(basename "$rundir")
+mkdir -p "$outputdir"
+pushd "$outputdir"
 
 cat << 'samplesheet_complete' > SampleSheet_complete.csv
 [Header]
@@ -1345,4 +1346,4 @@ Rscript --vanilla rscript.R
 
 duration=$(printf '%02dh:%02dm:%02ds\n' $(($SECONDS/3600)) $(($SECONDS%3600/60)) $(($SECONDS%60)))
 echoWithHeader "Done in: $duration!"
-exit 0
+popd
