@@ -1250,7 +1250,7 @@ setDTthreads(128L)
 
 #load sample sheet (samples only)
 samplesheet <- readLines("SampleSheet.csv")
-samplesheet <- samplesheet[-which(is.na(samplesheet) | samplesheet == "")]
+samplesheet <- samplesheet[!(is.na(samplesheet) | samplesheet == "")]
 finddata <- grep("\\[Data\\]", samplesheet)
 if(length(finddata) == 0) {
   stop("No \"[Data]\" line found in file ", basename(x))
