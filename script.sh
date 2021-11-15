@@ -1,9 +1,6 @@
 #!/bin/bash
 set -o errexit -o pipefail -o noclobber
 ulimit -n 4000
-module load bcl2fastq2/2.20.0-foss-2018a
-module load R/4.0.3-foss-2020b
-
 if [ ! $1 ]
 then
 	echo "Usage:"
@@ -21,6 +18,9 @@ echoWithHeader() {
   fi
   echo "*** [$(date '+%Y-%m-%d %H:%M:%S')]: $1 ***"
 }
+
+module load bcl2fastq2/2.20.0-foss-2018a
+module load R/4.0.3-foss-2020b
 
 rundir="${1}"
 outputdir=$(basename "$rundir")
