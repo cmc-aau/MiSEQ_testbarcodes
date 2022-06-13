@@ -3,8 +3,11 @@ Script for testing false/true positive reads in a MiSEQ run with custom barcodes
 
 **Note: Probably only works on our servers in Center for Microbial Communities, Aalborg University, but feel free to adapt!**
 
+# How to run
+ - Load R and bcl2fastq modules (use `module spider` to search for the exact name)
+`curl -fSsl https://github.com/cmc-aau/MiSEQ_testbarcodes/raw/master/script.sh | bash -s "/space/HiSeqUser/tempBackup/MiSeqBackup/RUNID"`
+
 **What it does**
- - Loads bcl2fastq module
  - Writes out a complete SampleSheet with all nextera+custom V13 forward and reverse barcodes (including those not necessarily barcoded in the pooled library)
  - Runs bcl2fastq with the complete sample sheet
  - Counts ALL reads per fastq file (per barcode combination)
